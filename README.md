@@ -18,12 +18,6 @@
 
 这是我的个人 3D 简历网站：一层随滚动运镜的 3D 人物背景 + 一层可滚动的内容（About → 履历 → 作品集）。纯前端 SPA，构建产物是静态文件，部署在 GitHub Pages。
 
-## 内容一览
-
-- **首屏**：3D 人物 + 个人信息
-- **履历**：大连理工大学 → 字节跳动 · 模型运营 → 大连崇振时代 / 现代汽车实习 → 开源
-- **作品集**：字节 · 模型运营的项目、开源项目（[dsh-lark-bridge](https://github.com/bihangchi9-creator/dsh-lark-bridge) / [trae-to-lark](https://github.com/bihangchi9-creator/trae-to-lark)）、实习作品
-
 ## 本地运行
 
 前端应用在 [`web/`](web) 下，命令都在 `web/` 里执行：
