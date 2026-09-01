@@ -8,6 +8,13 @@
 .claude/
 deploy/
 
+# 二次开发的临时工具与素材（模型压缩工具、原始大模型等，不入库）
+交付物/
+# 原作者模型备份（大文件，本地留存即可）
+web/public/models/*.original-sen-backup
+# 本地开发笔记（个人留存，不入库；版本历史见 CHANGELOG.md）
+改造记录.md
+
 # Blender 自动备份
 *.blend1
 *.blend2

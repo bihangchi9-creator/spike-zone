@@ -24,60 +24,54 @@ type Lang = 'en' | 'zh'
 
 const COPY = {
   en: {
-    title: 'About Sen',
-    paragraphs: [
-      "I'm Sen — a creative technologist living where code meets art. I spend my days around coding, creativity, playful interaction & design, and CG work. I love studying and combining skills across different fields — to create, and to explore more possibilities.",
-    ],
+    title: 'Spike',
+    paragraphs: [] as string[],
   },
   zh: {
-    title: 'About Sen',
-    paragraphs: [
-      '我是 Sen——一个游走在代码与艺术之间的创意技术人。我常年和 Coding、创意、有趣的交互 & 设计、CG 创作等打交道，喜欢研究并组合不同领域的技能，来创造并探索更多可能性。',
-    ],
+    title: 'Spike',
+    paragraphs: [] as string[],
   },
 }
 
-function Hero({ lang, cueOpacity }: { lang: Lang; cueOpacity: MotionValue<number> }) {
+function Hero({ lang, cueOpacity, scrollY }: { lang: Lang; cueOpacity: MotionValue<number>; scrollY: MotionValue<number> }) {
   const { title, paragraphs } = COPY[lang]
-  const aboutRef = useRef(null)
-  // 触发起点提前：about 顶部位于视口 60% 处即开始（offset[0] 进度 0），到达顶部为进度 1
-  const { scrollYProgress } = useScroll({
-    target: aboutRef,
-    offset: ['start 0.6', 'start start'],
-  })
-  // 透明度在 about 顶部升到约 30vh 时归 0：起点 60%→进度 p 时顶部在 0.6×(1−p)，
-  // 令 =0.3 解得 p=0.5，故 opacity 区间 [0, 0.5]
-  const blur = useTransform(scrollYProgress, [0, 0.5], ['blur(0px)', 'blur(16px)'])
-  const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0])
+  // 首屏标题的淡出/模糊/视差：直接用窗口绝对滚动量 scrollY 驱动，与视口尺寸/字号解耦
+  // （之前用 .about 容器的相对进度，宽屏大字号下容器变高，静止时进度就非 0 → 首屏即淡糊，故改此法）。
+  // 页顶 scrollY=0 恒为清晰；下滑到约一屏高度渐糊淡出。
+  const vh = typeof window !== 'undefined' ? window.innerHeight : 800
+  const blur = useTransform(scrollY, [vh * 0.15, vh * 0.6], ['blur(0px)', 'blur(16px)'], { clamp: true })
+  const opacity = useTransform(scrollY, [vh * 0.15, vh * 0.6], [1, 0], { clamp: true })
   // 视差：标题上升更快、字距随滚动拉开；正文上升慢一点
-  const titleY = useTransform(scrollYProgress, [0, 1], [0, -96])
-  const bodyY = useTransform(scrollYProgress, [0, 1], [0, -52])
-  const titleSpacing = useTransform(scrollYProgress, [0, 1], ['0.01em', '0.42em'])
+  const titleY = useTransform(scrollY, [0, vh], [0, -96])
+  const bodyY = useTransform(scrollY, [0, vh], [0, -52])
+  const titleSpacing = useTransform(scrollY, [0, vh], ['0.01em', '0.42em'])
   return (
     <section className="hero">
       <motion.div
         className="about"
         lang={lang}
-        ref={aboutRef}
         style={{ filter: blur, opacity }}
       >
         {/* 入场动画放内层，避免其 fill 锁住 opacity 覆盖外层滚动 opacity */}
-        <div className="about-intro">
-          <motion.h1 className="about-title" style={{ y: titleY, letterSpacing: titleSpacing }}>
-            {title}
-          </motion.h1>
-          {paragraphs.map((p, i) => (
-            <motion.p key={i} className="about-body" style={{ y: bodyY }}>
-              {p}
-            </motion.p>
-          ))}
+        {/* about-shift：用 transform 下移，不改变 .about 几何盒（否则会污染 scrollYProgress 起点） */}
+        <div className="about-shift">
+          <div className="about-intro">
+            <motion.h1 className="about-title" style={{ y: titleY, letterSpacing: titleSpacing }}>
+              {title}
+            </motion.h1>
+            {paragraphs.map((p, i) => (
+              <motion.p key={i} className="about-body" style={{ y: bodyY }}>
+                {p}
+              </motion.p>
+            ))}
+          </div>
         </div>
       </motion.div>
       <motion.div className="scroll-cue" style={{ opacity: cueOpacity }} aria-hidden="true">
-        <span className="scroll-cue-label">{lang === 'en' ? 'SCROLL' : '向下滚动'}</span>
         <span className="scroll-cue-track">
           <span className="scroll-cue-dot" />
         </span>
+        <span className="scroll-cue-label">{lang === 'en' ? 'SCROLL' : '向下滚动'}</span>
       </motion.div>
     </section>
   )
@@ -170,12 +164,13 @@ export default function App() {
         <span className="hero-mark bl">+</span>
         <span className="hero-mark br">+</span>
         <div className="hero-meta hm-tl">
-          <span className="hm-name">Sen Zheng 郑越升</span>
-          <span>Creative Technologist</span>
+          <span className="hm-name">毕航驰 Spike</span>
+          <span>字节跳动 · 模型运营</span>
         </div>
-        <div className="hero-meta hm-tr">Portfolio — 2026</div>
-        <div className="hero-meta hm-bl">Code · Art · Play</div>
-        <div className="hero-meta hm-right">Based in Shenzhen</div>
+        <div className="hero-meta hm-tr">Bihangchi — 2026</div>
+        <div className="hero-meta hm-bl">重复是最好的老师</div>
+        <div className="hero-meta hm-br">行动起来</div>
+        <div className="hero-meta hm-right">北京 · 大理</div>
       </motion.div>
 
       {/* 全屏胶片噪点蒙层（multiply 混合） */}
@@ -183,7 +178,7 @@ export default function App() {
 
       {/* 可滚动内容 */}
       <main className="content">
-        <Hero lang={lang} cueOpacity={cueOpacity} />
+        <Hero lang={lang} cueOpacity={cueOpacity} scrollY={scrollY} />
         <Resume lang={lang} />
         <Works lang={lang} innerRef={worksRef} />
       </main>

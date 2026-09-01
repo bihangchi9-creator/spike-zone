@@ -112,7 +112,7 @@ canvas {
 }
 
 .scroll-cue {
-  margin-top: 3vh;
+  margin-top: 16vh; /* 向下滚动提示：在标题下方再下移一些 */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -250,6 +250,11 @@ canvas {
   bottom: calc(var(--m) + 16px);
   left: calc(var(--m) + 20px);
 }
+.hm-br {
+  bottom: calc(var(--m) + 16px);
+  right: calc(var(--m) + 20px);
+  text-align: right;
+}
 .hm-right {
   top: 50%;
   right: calc(var(--m) + 7px);
@@ -276,10 +281,15 @@ canvas {
   animation: fadeDown 1.8s ease both;
 }
 
+/* 标题+正文整体下移：用 transform 而非 margin，避免改变 .about 几何盒污染滚动进度起点 */
+.about-shift {
+  transform: translateY(20.5vh);
+}
+
 .about-title {
-  font-family: 'Mansalva', cursive;
-  font-weight: 400;
-  font-size: clamp(30px, 7.2vw, 80px);
+  font-family: 'Playfair Display', serif;
+  font-weight: 500;
+  font-size: clamp(30px, 20vw, 220px);
   line-height: 1;
   letter-spacing: 0.01em;
   color: var(--ink);
@@ -357,8 +367,8 @@ canvas {
   width: min(480px, 90vw);
   margin: 0 6vw 0 auto;
   text-align: left;
-  font-family: 'Cormorant Upright', 'Chiron GoRound TC', 'PingFang SC', serif;
-  font-weight: 600;
+  font-family: 'Playfair Display', serif;
+  font-weight: 500;
   font-size: clamp(28px, 5vw, 56px);
   letter-spacing: 0.02em;
   color: var(--ink);
@@ -544,24 +554,6 @@ canvas {
   border-color: rgba(244, 241, 234, 0.4);
   background: rgba(244, 241, 234, 0.06);
   transform: translateY(-2px);
-}
-
-/* ZOOOP 动态 logo */
-.zooop-logo-link {
-  pointer-events: auto;
-  display: inline-flex;
-  color: var(--ink);
-  transition: color 0.2s ease;
-}
-
-.zooop-logo-link:hover {
-  color: #ffd9b3;
-}
-
-.zooop-logo {
-  display: block;
-  height: 20.8px;
-  width: auto;
 }
 
 /* 中文履历：行距放宽一点更耐读 */
@@ -964,8 +956,8 @@ canvas {
   top: clamp(16px, 4vh, 40px);
   left: clamp(24px, 6vw, 80px);
   z-index: 2;
-  font-family: 'Cormorant Upright', 'Chiron GoRound TC', 'PingFang SC', serif;
-  font-weight: 600;
+  font-family: 'Playfair Display', serif;
+  font-weight: 500;
   font-size: clamp(22px, 3vw, 38px);
   letter-spacing: 0.02em;
   color: var(--ink);

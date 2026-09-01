@@ -1,30 +1,10 @@
 import { motion } from 'framer-motion'
-import { ZooopLogo } from './ZooopLogo'
 import { SOCIAL_ICONS } from './SocialIcons'
 import { FOCUS_POINTS } from '../data/focusPoints'
-
-const SOCIAL_LINKS = [
-  {
-    id: 'douyin',
-    label: '抖音',
-    href: 'https://www.douyin.com/user/MS4wLjABAAAAlmQDgHf0NlbsjrfWENm8LyrIikxSRRq7mzlzQSIStQJkV7Ju52B6A55zw5TUDU5d',
-  },
-  {
-    id: 'bilibili',
-    label: 'B站',
-    href: 'https://space.bilibili.com/275344092?spm_id_from=333.937.0.0',
-  },
-  {
-    id: 'xiaohongshu',
-    label: '小红书',
-    href: 'https://www.xiaohongshu.com/user/profile/5ceba8c8000000000502fd69',
-  },
-]
 
 // 履历数据（双语）。英文为译稿，可按需润色。
 interface ResumeGroup {
   heading?: string
-  logo?: string
   logoImg?: string
   sub?: string
   link?: string
@@ -41,102 +21,102 @@ interface ResumeEntry {
 }
 const RESUME: Record<'en' | 'zh', { title: string; entries: ResumeEntry[] }> = {
   en: {
-    title: 'Résumé',
+    title: 'Resume',
     entries: [
       {
-        period: '2013 – 2017',
-        place: 'Sun Yat-sen University',
-        role: 'B.S. in Software Engineering',
+        period: '2022 – 2026',
+        place: 'Dalian University of Technology',
+        role: 'B.S. in Automation',
       },
       {
-        period: '2017 – 2020',
-        place: 'HOTSAR Studio · Shanghai',
-        role: 'Co-founder',
-        logo: { src: `${import.meta.env.BASE_URL}images/hotsar.jpg`, alt: 'HOTSAR' },
+        period: '2026.03 – Now',
+        place: 'ByteDance',
+        role: 'Model Operations',
         points: [
-          'Co-founder · team of 20+',
-          'Clients: Alibaba brands, Tencent, NetEase, DiDi, China Resources, McDonald’s…',
-          'Work: development / creative direction / animation / team management',
+          'Turn business needs into executable flows, tools and agentic workflows — focused on content generation & judgment',
+          'Distilled a general path: business SOP → Skill → Harness → vertical Agent',
+          'Deep work on LLM / multimodal Agent engineering & quality governance: model migration, Trace attribution, quality gates, human-in-loop',
+          'Drive complex business projects from design to delivery via AI coding',
         ],
       },
       {
-        period: '2020 – 2025',
-        place: 'Bad Printer Studio · Shenzhen',
-        role: 'Founder',
-        logo: { src: `${import.meta.env.BASE_URL}images/bp.png`, alt: 'Bad Printer Studio' },
+        period: '2025.08 – 2026.01',
+        place: 'Dalian Chongzhen Times Intelligent Tech',
+        role: 'AI Product Manager Intern',
         points: [
-          'Founder · team of 14',
-          'Clients: Honor of Kings / Trip.com / ByteDance / Kuaishou / VIVO / Tecno / Xiaomi / IM Motors…',
-          'Work: team management / creative direction / animation / development',
+          'Shipped a multi-AI-Agent content product and an AI-assisted design workflow 0→1',
+          'Explored Cursor / Claude Code to workflow-ize design & content production, boosting team efficiency',
         ],
       },
       {
-        period: '2025 – Now',
-        place: 'Content Creator',
+        period: '2025.06 – 2025.08',
+        place: 'Hyundai Motor R&D Center (China)',
+        role: 'Smart Cockpit Product Manager Intern',
+        points: [
+          'Designed the “AI Music Wallpaper” feature, owning product planning and logic end-to-end',
+          'Drove cross-team collaboration to push the plan into proof-of-concept',
+        ],
+      },
+      {
+        period: 'Now',
+        place: 'Open Source · GitHub',
         groups: [
           {
-            heading: '小郑还挺忙',
-            logoImg: `${import.meta.env.BASE_URL}images/buzyzheng.png`,
-            sub: 'tech-DIY creator',
-            items: ['120K on Douyin · 87K on Bilibili · 23K on Xiaohongshu'],
-            links: SOCIAL_LINKS,
+            heading: '@bihangchi9-creator',
+            sub: 'dsh-lark-bridge · trae-to-lark',
+            link: 'https://github.com/bihangchi9-creator',
           },
         ],
-      },
-      {
-        period: '2026 – Now',
-        place: 'Indie Developer',
-        groups: [{ logo: 'zooop', sub: 'AI creation platform', link: 'https://zooop.ai/' }],
       },
     ],
   },
   zh: {
-    title: 'Résumé',
+    title: 'Resume',
     entries: [
       {
-        period: '2013 – 2017',
-        place: '中山大学',
-        role: '软件工程 · 本科',
+        period: '2022 – 2026',
+        place: '大连理工大学',
+        role: '自动化 · 本科',
       },
       {
-        period: '2017 – 2020',
-        place: 'HOTSAR 工作室 · 上海',
-        role: '联合创始人',
-        logo: { src: `${import.meta.env.BASE_URL}images/hotsar.jpg`, alt: 'HOTSAR' },
+        period: '2026.03 – 至今',
+        place: '字节跳动',
+        role: '模型运营',
         points: [
-          '联合创始人，团队人数 20+',
-          '服务客户：阿里系品牌、腾讯、网易、滴滴、华润、麦当劳…',
-          '负责：技术开发 / 创意策划 / 动画制作 / 团队管理',
+          '把业务需求转化为可执行的流程、工具与智能工作流，聚焦内容生成与内容判断两大场景',
+          '沉淀「业务 SOP → Skill → Harness → 垂类 Agent」的通用产品化路径',
+          '深度参与 LLM / 多模态 Agent 的工程化与质量治理：模型迁移调优、Trace 归因、质量门禁、人在回路',
+          '以 AI Coding 驱动复杂业务项目从方案设计走向交付',
         ],
       },
       {
-        period: '2020 – 2025',
-        place: '坏打印机工作室 · 深圳',
-        role: '创始人',
-        logo: { src: `${import.meta.env.BASE_URL}images/bp.png`, alt: '坏打印机工作室' },
+        period: '2025.08 – 2026.01',
+        place: '大连崇振时代智能科技',
+        role: 'AI 产品经理实习生',
         points: [
-          '创始人，团队人数 14',
-          '服务客户：王者荣耀 / 携程 / 字节 / 快手 / VIVO / 传音 / 小米…',
-          '负责：团队管理 / 创意策划 / 动画制作 / 技术开发',
+          '从 0 到 1 落地多 AI Agent 内容产品与 AI 辅助设计工作流，主导需求拆解、方案设计与团队落地',
+          '主动探索 Cursor / Claude Code 等 AI 工具，将设计与内容制作流程工作流化，显著提升团队效率',
         ],
       },
       {
-        period: '2025 – 至今',
-        place: '自媒体博主',
+        period: '2025.06 – 2025.08',
+        place: '现代汽车研发中心（中国）',
+        role: '智能座舱产品经理实习生',
+        points: [
+          '参与智能座舱「AI 音乐壁纸」功能设计，独立完成产品规划与逻辑闭环',
+          '推动跨部门协作，将方案推进到概念验证阶段',
+        ],
+      },
+      {
+        period: '至今',
+        place: '开源 · GitHub',
         groups: [
           {
-            heading: '小郑还挺忙',
-            logoImg: `${import.meta.env.BASE_URL}images/buzyzheng.png`,
-            sub: '科技 DIY 博主',
-            items: ['抖音 12 万 · B站 8.7 万 · 小红书 2.3 万 关注'],
-            links: SOCIAL_LINKS,
+            heading: '@bihangchi9-creator',
+            sub: 'dsh-lark-bridge · trae-to-lark',
+            link: 'https://github.com/bihangchi9-creator',
           },
         ],
-      },
-      {
-        period: '2026 – 至今',
-        place: '独立开发',
-        groups: [{ logo: 'zooop', sub: 'AI 创作平台', link: 'https://zooop.ai/' }],
       },
     ],
   },
@@ -157,24 +137,13 @@ const itemV = {
 }
 
 function Group({ group }: { group: ResumeGroup }) {
-  const heading =
-    group.logo === 'zooop' ? (
-      <a
-        className="zooop-logo-link"
-        href={group.link}
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="ZOOOP"
-      >
-        <ZooopLogo className="zooop-logo" animated />
-      </a>
-    ) : group.link ? (
-      <a className="about-link" href={group.link} target="_blank" rel="noopener noreferrer">
-        {group.heading}
-      </a>
-    ) : (
-      <span>{group.heading}</span>
-    )
+  const heading = group.link ? (
+    <a className="about-link" href={group.link} target="_blank" rel="noopener noreferrer">
+      {group.heading}
+    </a>
+  ) : (
+    <span>{group.heading}</span>
+  )
 
   return (
     <motion.div className="tl-group" variants={itemV}>

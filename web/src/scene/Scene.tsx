@@ -19,8 +19,9 @@ const NODE_LINE = 0.3 // 节点"终点"参考线：条目顶部到达视口该�
 // 上下渐变背景球（包裹相机），两端颜色可调
 function GradientBackground() {
   // glb 相机视角很窄(~23°)，只看到渐变中间一条；陡度把可见窄带拉伸出完整过渡
-  const top = '#6f906f'
-  const bottom = '#dbd3b5'
+  // 深藏蓝渐变（取自人物贴图主色，与人物同色系不割裂）
+  const top = '#2a2f42'
+  const bottom = '#565b6e'
   const steep = 1.4
 
   const uniforms = useMemo(
@@ -116,11 +117,14 @@ function Man2({
   dofBokehRef: MutableRefObject<number>
   dofRangeRef: MutableRefObject<number>
 }) {
+  // 模型摆位（经浏览器实测锁定的首屏视角，与合成运镜配合）
   const posX = 0
-  const posY = 0.4
-  const posZ = -0.7
-  const scale = 2.25
-  const rotationY = 0
+  const posY = 3.95
+  const posZ = 0.3
+  const scale = 12.1
+  const rotationX = -6 // 俯仰（低头/抬头）
+  const rotationY = -43 // 绕 Y 轴转，正脸→3/4 侧脸
+  const rotationZ = 0 // 倾斜（歪头）
 
   // mobilePullback：移动端相机沿「焦点→相机」方向拉远的倍率（1 = 不变，1.2 = 远 20%）
   // mobileTimelineShift：移动端「时间轴阶段」相机水平位移，单位=视距占比（正=左移，负=右移，0=关）
@@ -143,6 +147,19 @@ function Man2({
     smooth: 0.44,
     crossEye: 45,
     crossRadius: 0.25,
+  }
+
+  // 合成运镜（模型无自带相机时启用）：契合肖像的「缓慢推近 + 轻环绕 + 微俯身」。
+  // from = 首屏机位（须与 App.tsx 的 Canvas camera 一致，保证首屏视角不变）；
+  // to = 滚到底时的机位；target = 全程注视点（面部附近）。
+  const shot = {
+    fov: 39,
+    from: { x: 0, y: 5.0, z: 19.0 }, // 首屏：与默认相机一致
+    to: { x: -1.4, y: 5.5, z: 12.8 }, // 结束：推近 + 轻微左移升高
+    targetFrom: { x: 0, y: 5.0, z: 0 }, // 首屏注视点（与相机等高 → 平视，复刻当前构图）
+    targetTo: { x: 0.2, y: 4.3, z: 0 }, // 结束注视点：略降 → 轻微俯身看脸
+    parallax: 2.4, // 鼠标视差幅度（度）
+    parallaxEase: 0.1,
   }
 
   const get = useThree((s) => s.get)
@@ -456,6 +473,40 @@ function Man2({
         camera.fov = glbCam.fov
         camera.updateProjectionMatrix()
       }
+    } else if (camera.isPerspectiveCamera) {
+      // 合成运镜（模型无自带相机）：按滚动进度 p 在 from→to 之间插值机位与注视点，
+      // 叠加鼠标视差（绕注视点轻微轨道旋转，注视点屏幕位置不变）。
+      const p = THREE.MathUtils.clamp(frame / totalFrames, 0, 1)
+      const ease = p * p * (3 - 2 * p) // smoothstep，起止更柔和
+      // 机位
+      camPos.current.set(
+        THREE.MathUtils.lerp(shot.from.x, shot.to.x, ease),
+        THREE.MathUtils.lerp(shot.from.y, shot.to.y, ease),
+        THREE.MathUtils.lerp(shot.from.z, shot.to.z, ease)
+      )
+      // 注视点
+      tmpVec.current.set(
+        THREE.MathUtils.lerp(shot.targetFrom.x, shot.targetTo.x, ease),
+        THREE.MathUtils.lerp(shot.targetFrom.y, shot.targetTo.y, ease),
+        THREE.MathUtils.lerp(shot.targetFrom.z, shot.targetTo.z, ease)
+      )
+      // 鼠标缓动
+      const me = 1 - Math.pow(shot.parallaxEase, dt)
+      smouse.current.x += (mouse.current.x - smouse.current.x) * me
+      smouse.current.y += (mouse.current.y - smouse.current.y) * me
+      const ax = THREE.MathUtils.degToRad(shot.parallax)
+      paraEuler.current.set(-smouse.current.y * ax, -smouse.current.x * ax, 0)
+      paraQuat.current.setFromEuler(paraEuler.current)
+      // 绕注视点旋转机位 → 视差
+      camPos.current.sub(tmpVec.current).applyQuaternion(paraQuat.current).add(tmpVec.current)
+      camera.position.copy(camPos.current)
+      camera.up.set(0, 1, 0)
+      camera.lookAt(tmpVec.current)
+      if (focusRef) focusRef.current.copy(tmpVec.current)
+      if (camera.fov !== shot.fov) {
+        camera.fov = shot.fov
+        camera.updateProjectionMatrix()
+      }
     }
 
     // 4) 眼睛跟随（用当前激活相机做屏幕投影）；移动端 / 触屏则跳过
@@ -494,7 +545,11 @@ function Man2({
   return (
     <group
       position={[posX, posY, posZ]}
-      rotation={[0, (rotationY * Math.PI) / 180, 0]}
+      rotation={[
+        (rotationX * Math.PI) / 180,
+        (rotationY * Math.PI) / 180,
+        (rotationZ * Math.PI) / 180,
+      ]}
       scale={scale}
     >
       <primitive object={model} />
@@ -518,7 +573,7 @@ function Post2({
   const post = {
     bloomIntensity: 0.6,
     bloomThreshold: 0.82,
-    dof: true,
+    dof: false, // 关闭景深模糊（用户不需要）
     startBokeh: 7.4,
     startRange: 2.0,
     focusBokeh: 11.0,
