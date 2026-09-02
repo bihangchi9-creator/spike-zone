@@ -5,13 +5,13 @@
   <img src="https://img.shields.io/badge/TypeScript-5-3178C6?style=flat&logo=typescript&logoColor=white" alt="TypeScript 5">
   <img src="https://img.shields.io/badge/three.js-r169-000000?style=flat&logo=three.js&logoColor=white" alt="three.js">
   <img src="https://img.shields.io/badge/Vite-5-646CFF?style=flat&logo=vite&logoColor=white" alt="Vite 5">
-  <a href="https://bihangchi9-creator.github.io/bihangchi-web/"><img src="https://img.shields.io/badge/live-demo-brightgreen?style=flat" alt="Live Demo"></a>
+  <a href="https://bihangchi9-creator.github.io/spike-zone/"><img src="https://img.shields.io/badge/live-demo-brightgreen?style=flat" alt="Live Demo"></a>
 </p>
 
 <p align="center"><b>滚动即运镜，把简历长在一个 3D 场景里。</b></p>
 
 <p align="center">
-  <a href="https://bihangchi9-creator.github.io/bihangchi-web/">🌐 在线访问</a>
+  <a href="https://bihangchi9-creator.github.io/spike-zone/">🌐 在线访问</a>
 </p>
 
 我是 **毕航驰（Spike）**，目前在字节跳动做模型运营，方向是把业务 SOP 沉淀为可复用的 AI 能力（Skill / Harness / 垂类 Agent）。
