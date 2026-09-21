@@ -53,7 +53,7 @@ export interface WorksLang {
 
 export const WORKS: Record<'zh' | 'en', WorksLang> = {
   zh: {
-    title: 'Works',
+    title: '作品',
     closeLabel: '返回',
     openLabel: '展开作品',
     hint: '继续下滑',

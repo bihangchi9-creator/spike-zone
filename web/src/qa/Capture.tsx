@@ -1,0 +1,9 @@
+import { useEffect, useRef, useState } from 'react'
+export default function Capture(){
+ const [status,setStatus]=useState(''),[recording,setRecording]=useState(false),recorder=useRef<MediaRecorder|null>(null)
+ const label=()=>new URLSearchParams(location.search).get('label')||'capture'
+ const save=async(blob:Blob,ext:string)=>{const r=await fetch(`/__qa-artifact?name=${encodeURIComponent(label()+'-'+Date.now()+'.'+ext)}`,{method:'POST',body:blob});setStatus(r.ok?'已保存 '+await r.text():'保存失败')}
+ useEffect(()=>()=>{if(recorder.current?.state==='recording')recorder.current.stop()},[])
+ const record=()=>{const canvas=document.querySelector('canvas');if(!canvas)return;const stream=canvas.captureStream(30),chunks:BlobPart[]=[];const mime=MediaRecorder.isTypeSupported('video/webm;codecs=vp9')?'video/webm;codecs=vp9':'video/webm';const r=new MediaRecorder(stream,{mimeType:mime,videoBitsPerSecond:6000000});recorder.current=r;r.ondataavailable=e=>chunks.push(e.data);r.onstop=()=>{setRecording(false);void save(new Blob(chunks,{type:mime}),'webm');stream.getTracks().forEach(t=>t.stop())};r.onerror=()=>{setRecording(false);setStatus('录制失败')};r.start(1000);setRecording(true);setStatus('录制中 · 30 秒 · 仅 3D 画面');setTimeout(()=>{if(r.state==='recording')r.stop()},30000)}
+ return <div style={{position:'fixed',bottom:22,left:12,zIndex:20000,background:'#07121fee',padding:8,fontSize:11,color:'white',maxWidth:'90vw'}}><button onClick={()=>document.querySelector('canvas')?.toBlob(b=>{if(b)void save(b,'png')})}>保存画面</button> <button onClick={record} disabled={recording}>录制 30 秒</button>{recording&&<button onClick={()=>recorder.current?.stop()}>结束录制</button>}<button onClick={()=>{sessionStorage.removeItem('spike-intro-seen');location.reload()}}>重放完整入场</button><output style={{display:'block'}}>{status}</output></div>
+}

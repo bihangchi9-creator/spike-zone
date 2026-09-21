@@ -1,3 +1,4 @@
+import { englishDocs } from './workDocs.en'
 // 作品详情内容规范：每个作品一个 markdown 文件，放在 src/content/works/<slug>.md
 //
 // frontmatter（--- 之间）字段（均可选）：
@@ -64,6 +65,6 @@ for (const path in files) {
   docs[slug] = { slug, ...data, body } as WorkDoc
 }
 
-export function getWorkDoc(slug?: string): WorkDoc | null {
-  return slug ? docs[slug] || null : null
+export function getWorkDoc(slug?: string, lang: 'zh' | 'en' = 'zh'): WorkDoc | null {
+  return slug ? (lang === 'en' ? englishDocs[slug] : docs[slug]) || null : null
 }

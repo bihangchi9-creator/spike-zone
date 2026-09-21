@@ -3,29 +3,21 @@ import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import rehypeRaw from 'rehype-raw'
-import { WORKS, SECTION_COVERS, type WorkListItem, type WorkSection, type WorksLang } from '../data/works'
+import { WORKS, type WorkListItem, type WorkSection, type WorksLang } from '../data/works'
 import { getWorkDoc } from '../data/workDocs'
 
 const EASE = [0.22, 1, 0.36, 1]
 
 // 极简清单的一行：作品名靠左、数据(播放量/标签)靠右、发丝线分隔；整行可点开全屏详情
 function WorkLine({ item, onOpen }: { item: WorkListItem; onOpen: (item: WorkListItem) => void }) {
-  const hasMeta = item.meta || (item.tags && item.tags.length)
   return (
     <li className="wk-line">
       <button className="wk-line-btn" onClick={() => onOpen(item)}>
-        <span className="wk-line-name">{item.name}</span>
-        {hasMeta && (
-          <span className="wk-line-meta">
-            {item.meta && <span className="wk-line-num">{item.meta}</span>}
-            {item.tags &&
-              item.tags.map((t, i) => (
-                <span key={i} className="wk-line-tag">
-                  {t}
-                </span>
-              ))}
-          </span>
-        )}
+        <span className="wk-line-copy">
+          <span className="wk-line-name">{item.name}</span>
+          {item.meta && <span className="wk-line-summary">{item.meta}</span>}
+        </span>
+        <span className="wk-line-arrow" aria-hidden="true">↗</span>
       </button>
     </li>
   )
@@ -41,8 +33,11 @@ function SectionCard({
   data: WorksLang
   onOpen: (item: WorkListItem) => void
 }) {
-  const [coverError, setCoverError] = useState(false)
-  const cover = SECTION_COVERS[section.id]
+  const studies: Record<string, string[]> = {
+    bytedance: [data === WORKS.en ? 'Business SOP' : '业务 SOP', 'Skill / Harness', 'Agent'],
+    opensource: [data === WORKS.en ? 'Feishu' : '飞书', data === WORKS.en ? 'Bridge' : '桥接', 'Coding Agent'],
+    intern: data === WORKS.en ? ['Music', 'AI', 'Cockpit'] : ['音乐', 'AI', '座舱体验'],
+  }
   return (
     <div className="wk-card">
       <div className="wk-card-head">
@@ -50,14 +45,11 @@ function SectionCard({
         <h3 className="wk-card-title">{section.title}</h3>
         <span className="wk-card-tagline">{section.tagline}</span>
       </div>
-      <div className="wk-card-cover">
-        {cover && !coverError ? (
-          <img src={cover} alt="" onError={() => setCoverError(true)} />
-        ) : (
-          <div className="wk-card-cover-ph" aria-hidden="true">
-            <span className="wk-card-cover-no">{section.no}</span>
-          </div>
-        )}
+      <div className={`wk-study wk-study-${section.id}`} aria-label={data === WORKS.en ? 'Project direction' : '项目方向示意'}>
+        <span className="wk-study-label">{data === WORKS.en ? (section.id === 'bytedance' ? 'SYSTEMS' : section.id === 'opensource' ? 'CONNECTIONS' : 'EXPERIENCES') : (section.id === 'bytedance' ? '系统' : section.id === 'opensource' ? '连接' : '体验')}</span>
+        <div className="wk-study-flow">
+          {(studies[section.id] || [section.title]).map((step) => <span key={step}>{step}</span>)}
+        </div>
       </div>
       <SectionWorks section={section} data={data} onOpen={onOpen} />
     </div>
@@ -123,7 +115,7 @@ function WorkDetail({
   onClose: () => void
 }) {
   const [bannerError, setBannerError] = useState(false)
-  const doc = getWorkDoc(item.slug)
+  const doc = getWorkDoc(item.slug, data === WORKS.en ? 'en' : 'zh')
   const title = (doc && doc.title) || item.name
   const banner = doc && doc.banner
   // 有 md 详情时展示完整信息；无 md 时详情页只保留标题 + 统一占位文案
@@ -131,6 +123,23 @@ function WorkDetail({
   const tags = doc ? doc.tags || item.tags : null
   // 副标题不含年份；标签单独做 badge 展示
   const sub = doc ? [item.meta, doc.role].filter(Boolean).join('  ·  ') : ''
+
+  const dialogRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    const previous = document.activeElement as HTMLElement | null
+    const dialog = dialogRef.current
+    dialog?.querySelector<HTMLButtonElement>('button')?.focus()
+    const trapFocus = (event: KeyboardEvent) => {
+      if (event.key !== 'Tab' || !dialog) return
+      const elements = Array.from(dialog.querySelectorAll<HTMLElement>('button, a[href], [tabindex="0"]'))
+      const first = elements[0]
+      const last = elements[elements.length - 1]
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last?.focus() }
+      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first?.focus() }
+    }
+    document.addEventListener('keydown', trapFocus)
+    return () => { document.removeEventListener('keydown', trapFocus); previous?.focus() }
+  }, [])
 
   return (
     <>
@@ -144,6 +153,10 @@ function WorkDetail({
       />
       <motion.div
         className="wk-detail"
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="work-detail-title"
         initial={{ opacity: 0, scale: 0.985, y: 8 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.99, y: 6 }}
@@ -157,15 +170,12 @@ function WorkDetail({
           <div className="wk-detail-banner">
             <img src={banner} alt={title} onError={() => setBannerError(true)} />
           </div>
-        ) : (
-          <div className="wk-detail-banner is-ph" aria-hidden="true">
-            <span className="wk-detail-ph-text">{title}</span>
-          </div>
-        )}
+        ) : null}
 
         <article className="wk-detail-article">
           <header className="wk-detail-head">
-            <h3 className="wk-detail-title">{title}</h3>
+            <div className="wk-detail-kicker">{data === WORKS.en ? 'PROJECT NOTES' : '项目档案'} <span>{doc?.year}</span></div>
+            <h3 id="work-detail-title" className="wk-detail-title">{title}</h3>
             {sub && <div className="wk-detail-sub">{sub}</div>}
             {tags && tags.length > 0 && (
               <div className="wk-detail-tags">

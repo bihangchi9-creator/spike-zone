@@ -1,0 +1,5 @@
+export const CAMPUS_STORIES:Record<string,{name:[string,string];body:[string,string]}>={
+ 'dut-digital-human':{name:['元宇宙数字人项目','Metaverse digital human'],body:['围绕数字人的产品定义与 Demo 实施，项目涉及大模型 API、语音交互和 UE5 交互 Demo。屏幕中的数字人是抽象示意，不是项目原始界面的复原。','A digital-human product and demo involving LLM APIs, voice interaction and an interactive UE5 demo. The on-screen figure is an abstract illustration, not a reconstruction of the original interface.']},
+ 'dut-basketball':{name:['校园篮球赛','Campus basketball'],body:['校园篮球赛是这段经历的一部分。具体角色、比赛过程、成绩和照片尚待补充；这里不预设奖项或比赛结果。','Campus basketball is part of this experience. The role, game narrative, results and photos are still to be added; no award or result is assumed.']},
+ 'dut-theater':{name:['校史话剧《屈伯川》','University history play: Qu Bochuan'],body:['校史话剧《屈伯川》是这段校园经历的一部分。当前保留空舞台、幕布与灯光意象；具体参与角色、剧情布景与过程资料待补充。','The university history play Qu Bochuan is part of this campus experience. The scene uses an empty stage, curtains and lighting; participation, set design and process details are to be added.']}
+}

@@ -1,5 +1,7 @@
 # CLAUDE.md
 
+For planet/world visual design, read [星球设计协作偏好](docs/星球设计协作偏好.md) first. The user requests concrete questions and collaborative interpretation before generating revisions when design intent is unclear; ground narrative details in their real projects.
+
 Conventions for **AI coding assistants** (Claude Code / Cursor / Copilot, etc.) working in this repo. This is a **scroll-driven personal 3D résumé** built on **React Three Fiber + TypeScript**: a fixed 3D background (a character model that reacts to scroll) plus scrollable HTML content in front (About → résumé → works). `README.md` explains the concept and usage for humans; this file adds the collaboration gotchas without repeating it.
 
 ## Repo layout (read this first)

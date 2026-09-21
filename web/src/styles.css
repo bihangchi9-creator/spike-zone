@@ -1523,3 +1523,96 @@ canvas {
     font-size: 11.5px;
   }
 }
+
+/* Local design study 01: preserve grain and soft focus, refine reading rhythm. */
+:root { font-family: 'Helvetica Neue', 'PingFang SC', 'Microsoft YaHei', sans-serif; }
+.tl-place, .wk-card-title, .wk-detail-title { font-weight: 500; letter-spacing: -.025em; }
+.tl-role { margin-top: 10px; }
+.tl-points { gap: 14px; }
+.tl-points li { font-size: 15px; line-height: 1.85; color: rgba(244,241,234,.85); }
+.tl-entry { padding-bottom: 34vh; }
+.tl-entry:first-child { padding-bottom: 28vh; }
+.tl-period { font-size: 11px; letter-spacing: .16em; }
+.resume-title::before { content: '01 / EXPERIENCE'; display: block; font: 10px 'Helvetica Neue', sans-serif; letter-spacing: .22em; color: var(--muted); margin-bottom: 20px; }
+.wk-card { gap: 28px; padding: 108px 56px 76px; background: rgba(13,17,25,.74); }
+.wk-card-title { font-size: clamp(26px,3vw,40px); line-height: 1.2; }
+.wk-card-no { margin-bottom: 12px; font-size: 10px; }
+.wk-card-tagline { font-size: 13px; line-height: 1.7; letter-spacing: .02em; }
+.wk-study { padding: 16px 0 18px; border-block: 1px solid var(--line); }
+.wk-study-label { font-size: 9px; letter-spacing: .22em; color: rgba(244,241,234,.4); }
+.wk-study-flow { display: flex; align-items: center; margin-top: 17px; }
+.wk-study-flow span { flex: 1; font-size: 12px; letter-spacing: .03em; color: rgba(244,241,234,.7); display: flex; align-items: center; }
+.wk-study-flow span:not(:last-child)::after { content: ''; flex: 1; height: 1px; margin: 0 16px; background: linear-gradient(90deg,rgba(255,217,179,.4),rgba(255,217,179,.08)); }
+.wk-study-flow span:last-child { flex: none; color: #ffd9b3; }
+.wk-line-btn { align-items: center; gap: 24px; padding: 16px 0; }
+.wk-line-copy { display: flex; flex-direction: column; gap: 7px; }
+.wk-line-name { font-size: 16px; }
+.wk-line-summary { font-size: 12px; line-height: 1.65; color: var(--muted); }
+.wk-line-arrow { color: rgba(244,241,234,.4); font-size: 19px; transition: transform .3s, color .3s; }
+.wk-line-btn:hover .wk-line-arrow { color: #ffd9b3; transform: translate(2px,-2px); }
+.wk-line-btn:focus-visible { outline: 1px solid #ffd9b3; outline-offset: 4px; }
+.wk-foot { margin-top: 18px; padding-top: 14px; }
+.wk-foot-line { font-size: 11px; letter-spacing: .05em; }
+.wk-detail { background: rgba(25,30,35,.97); border-radius: 12px; }
+.wk-detail-article { max-width: 820px; padding: 64px 64px 72px; }
+.wk-detail-kicker { display: flex; justify-content: space-between; color: var(--muted); font-size: 10px; letter-spacing: .2em; margin-bottom: 32px; }
+.wk-detail-title { line-height: 1.35; }
+.wk-detail-sub { font-size: 12px; line-height: 1.8; letter-spacing: .02em; }
+.wk-detail-tags { margin-top: 20px; }
+.wk-badge { border: none; background: transparent; border-radius: 0; padding: 0 12px 0 0; border-right: 1px solid var(--line); color: var(--muted); }
+.wk-badge:last-child { border: none; }
+.wk-md { font-size: 16px; line-height: 2; }
+.wk-md > p:first-child { font-size: 20px; line-height: 1.7; color: var(--ink); margin-bottom: 28px; }
+.wk-md strong { font-weight: 500; color: #ffd9b3; }
+.wk-detail-close { position: sticky; top: 16px; float: right; margin: 16px 16px 0 0; }
+.site-footer { position: relative; display: flex; align-items: center; flex-wrap: wrap; gap: 36px; padding: 72px 6vw 36px; background: rgba(13,17,25,.88); border-top: 1px solid var(--line); }
+.site-footer > div { margin-right: auto; }
+.footer-kicker { font-size: 10px; letter-spacing: .22em; color: var(--muted); }
+.site-footer p { margin-top: 18px; font-size: 30px; font-weight: 400; }
+.site-footer a, .site-footer button { color: var(--ink); font: inherit; font-size: 13px; text-decoration: none; border: none; border-bottom: 1px solid var(--line); background: none; padding: 10px 0; cursor: pointer; }
+.site-footer a:hover, .site-footer button:hover { color: #ffd9b3; }
+.footer-signature { flex-basis: 100%; padding-top: 32px; font-size: 10px; letter-spacing: .12em; color: var(--muted); }
+@media (min-width: 901px) and (min-height: 681px) and (max-height: 820px) {
+  .wk-card { gap: 18px; padding-top: 92px; padding-bottom: 60px; }
+  .wk-study { padding: 10px 0 12px; }
+  .wk-study-flow { margin-top: 10px; }
+  .wk-line-btn { padding: 9px 0; }
+  .wk-line-copy { gap: 4px; }
+  .wk-foot { margin-top: 10px; padding-top: 10px; }
+}
+/* Natural document height for tablets and short windows keeps all projects reachable. */
+@media (max-width: 900px), (max-height: 680px) {
+  .wk-gallery { height: auto !important; }
+  .wk-gallery-sticky { position: static; height: auto; overflow: visible; display: block; }
+  .wk-track { flex-direction: column; height: auto; padding-left: 0; transform: none !important; }
+  .wk-card { width: 100%; height: auto; padding: 40px 7vw 48px; border-left: none; border-top: 1px solid var(--line); }
+  .wk-card:last-child { border-right: none; }
+  .wk-gallery-title { position: static; display: block; padding: 32px 7vw; }
+  .wk-progress, .wk-hint { display: none; }
+}
+@media (max-width: 640px) {
+  .hero-meta { letter-spacing: .12em; }
+  .hero { min-height: 100svh; }
+  .about-title { font-size: clamp(76px,24vw,140px); }
+  .about-shift { transform: translateY(16vh); }
+  .resume { padding-inline: 24px; }
+  .resume-title, .timeline { width: 100%; margin-right: 0; }
+  .tl-entry { padding-left: 24px; padding-bottom: 22vh; }
+  .tl-entry:first-child, .tl-entry:last-child { padding-bottom: 20vh; }
+  .tl-body { padding: 22px 20px; border-radius: 6px; background: rgba(10,13,20,.54); }
+  .tl-place { font-size: 22px; line-height: 1.4; }
+  .tl-points li { font-size: 14px; line-height: 1.8; }
+  .wk-line-btn { flex-direction: row; align-items: center; padding: 18px 0; }
+  .wk-line-name { font-size: 16px; }
+  .wk-line-summary { font-size: 12px; }
+  .wk-study-flow span { font-size: 10px; }
+  .wk-study-flow span:not(:last-child)::after { margin-inline: 9px; }
+  .wk-detail { inset: 12px; border-radius: 8px; }
+  .wk-detail-article { padding: 60px 24px 40px; }
+  .wk-detail-kicker { margin-bottom: 24px; }
+  .wk-detail-title { font-size: 27px; }
+  .wk-md { font-size: 15px; line-height: 1.9; }
+  .wk-md > p:first-child { font-size: 18px; }
+  .site-footer { padding: 48px 7vw 28px; gap: 24px; }
+  .site-footer > div { flex-basis: 100%; }
+}

@@ -4,6 +4,8 @@ import { useGLTF } from '@react-three/drei'
 import { EffectComposer, Bloom, DepthOfField, SMAA } from '@react-three/postprocessing'
 import * as THREE from 'three'
 import Env from './Env'
+import { fadeGroup, type Journey } from '../universe/cinematic'
+import { useSpace } from '../universe/state'
 import { FOCUS_POINTS, FRAMES_PER_NODE } from '../data/focusPoints'
 
 useGLTF.preload(`${import.meta.env.BASE_URL}models/me.glb`)
@@ -16,69 +18,22 @@ const WORKS_ENTRANCE = 50 // 作品区"入场"（画廊屏幕从底部滑入覆�
 const FPS = 24 // 所有 clip @24fps 共享时间轴；相机动画总帧数运行时从 CameraAction clip 读（见 totalFrames）
 const NODE_LINE = 0.3 // 节点"终点"参考线：条目顶部到达视口该高度(从上 30%)时锁定为该节点
 
-// 上下渐变背景球（包裹相机），两端颜色可调
-function GradientBackground() {
-  // glb 相机视角很窄(~23°)，只看到渐变中间一条；陡度把可见窄带拉伸出完整过渡
-  // 深藏蓝渐变（取自人物贴图主色，与人物同色系不割裂）
-  const top = '#2a2f42'
-  const bottom = '#565b6e'
-  const steep = 1.4
-
-  const uniforms = useMemo(
-    () => ({
-      uTop: { value: new THREE.Color() },
-      uBottom: { value: new THREE.Color() },
-      uSteep: { value: 1 },
-    }),
-    []
-  )
-  uniforms.uTop.value.set(top)
-  uniforms.uBottom.value.set(bottom)
-  uniforms.uSteep.value = steep
-
-  return (
-    <mesh scale={100}>
-      <sphereGeometry args={[1, 32, 32]} />
-      <shaderMaterial
-        side={THREE.BackSide}
-        depthWrite={false}
-        uniforms={uniforms}
-        vertexShader={/* glsl */ `
-          varying vec3 vDir;
-          void main() {
-            vDir = normalize(position);
-            gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-          }
-        `}
-        fragmentShader={/* glsl */ `
-          uniform vec3 uTop;
-          uniform vec3 uBottom;
-          uniform float uSteep;
-          varying vec3 vDir;
-          void main() {
-            // 以地平线(y=0)为中心按陡度拉伸，narrow-fov 下也能看到完整过渡
-            float t = clamp(vDir.y * uSteep * 0.5 + 0.5, 0.0, 1.0);
-            gl_FragColor = vec4(mix(uBottom, uTop, t), 1.0);
-          }
-        `}
-      />
-    </mesh>
-  )
-}
-
 // 所有光源（HDRI 环境 + 半球 + 主/补方向光）
 function Lights() {
   const c = {
-    envIntensity: 0.85,
-    hemiIntensity: 1.15,
-    hemiSky: '#ffffff',
+    envIntensity: 0.48,
+    hemiIntensity: 0.55,
+    hemiSky: '#b7c8dd',
     hemiGround: '#404040',
-    keyIntensity: 2.35,
-    keyColor: '#ffd9c6',
+    keyIntensity: 1.85,
+    keyColor: '#e7d9c9',
     keyPos: [5, 8, 5] as [number, number, number],
-    fillIntensity: 2.25,
-    fillColor: '#9fc6ff',
+    fillIntensity: 1.15,
+    fillColor: '#a6b6cc',
     fillPos: [-5, 4, -4] as [number, number, number],
+    rimIntensity: 0.55,
+    rimColor: '#a8b8d0',
+    rimPos: [-7, 9, -8] as [number, number, number],
   }
 
   return (
@@ -101,17 +56,20 @@ function Lights() {
         shadow-mapSize={[2048, 2048]}
       />
       <directionalLight position={c.fillPos} intensity={c.fillIntensity} color={c.fillColor} />
+      <directionalLight position={c.rimPos} intensity={c.rimIntensity} color={c.rimColor} />
     </>
   )
 }
 
 // me.glb：模型 + glb 自带相机动画（滚动分 5 段擦除）+ 自动对焦 + 眼睛跟随
 function Man2({
+  home,
   focusRef,
   frameRef,
   dofBokehRef,
   dofRangeRef,
 }: {
+  home: boolean
   focusRef: MutableRefObject<THREE.Vector3>
   frameRef: MutableRefObject<number>
   dofBokehRef: MutableRefObject<number>
@@ -288,6 +246,15 @@ function Man2({
         window.innerWidth <= 640)
   )
 
+  useEffect(() => {
+    const coarse = window.matchMedia('(pointer: coarse)')
+    const update = () => { isMobile.current = coarse.matches || window.innerWidth <= 640 }
+    update()
+    window.addEventListener('resize', update)
+    coarse.addEventListener('change', update)
+    return () => { window.removeEventListener('resize', update); coarse.removeEventListener('change', update) }
+  }, [])
+
   // 履历锚点 DOM 元素（决定当前播放到第几段）
   const anchorEls = useRef<any>(null)
   // 作品区画廊 DOM 元素（决定作品入场 / 横移阶段的帧）
@@ -311,6 +278,7 @@ function Man2({
   const paraQuat = useRef(new THREE.Quaternion())
 
   useFrame((_, dt) => {
+    if (!home) return
     const a = 1 - Math.pow(cam.damping, dt)
 
     // 1) 由履历锚点（文档坐标）算连续索引 s：
@@ -490,6 +458,11 @@ function Man2({
         THREE.MathUtils.lerp(shot.targetFrom.y, shot.targetTo.y, ease),
         THREE.MathUtils.lerp(shot.targetFrom.z, shot.targetTo.z, ease)
       )
+      // Keep the lower edge of the portrait outside the mobile frame.
+      if (isMobile.current) {
+        camPos.current.y += 1.7
+        tmpVec.current.y += 1.7
+      }
       // 鼠标缓动
       const me = 1 - Math.pow(shot.parallaxEase, dt)
       smouse.current.x += (mouse.current.x - smouse.current.x) * me
@@ -498,7 +471,10 @@ function Man2({
       paraEuler.current.set(-smouse.current.y * ax, -smouse.current.x * ax, 0)
       paraQuat.current.setFromEuler(paraEuler.current)
       // 绕注视点旋转机位 → 视差
-      camPos.current.sub(tmpVec.current).applyQuaternion(paraQuat.current).add(tmpVec.current)
+      camPos.current.sub(tmpVec.current).applyQuaternion(paraQuat.current)
+      // Portrait framing needs a wider field on narrow screens, including synthetic cameras.
+      if (isMobile.current) camPos.current.multiplyScalar(1.48)
+      camPos.current.add(tmpVec.current)
       camera.position.copy(camPos.current)
       camera.up.set(0, 1, 0)
       camera.lookAt(tmpVec.current)
@@ -627,7 +603,36 @@ function Post2({
 }
 
 // 场景根组件：展示 me.glb（相机由 glb 动画 + 滚动驱动）
-export default function Scene() {
+export default function Scene({home, journey}: {home:boolean; journey:MutableRefObject<Journey>}) {
+  const portrait = useRef<THREE.Group>(null)
+  const low = useSpace(s=>s.low)
+  const edgeReady=useRef(false)
+  useFrame(()=>{
+    const group=portrait.current
+    if(!group)return
+    if(edgeReady.current){fadeGroup(group,home?1:journey.current.portrait);return}
+    if(!group.children.length)return
+    edgeReady.current=true
+    group.updateWorldMatrix(true,true)
+    const bounds=new THREE.Box3().setFromObject(group)
+    group.traverse(object=>{
+      if(!(object instanceof THREE.Mesh))return
+      const materials=Array.isArray(object.material)?object.material:[object.material]
+      for(const material of materials){
+        if(material.userData.portraitEdge)continue
+        material.userData.portraitEdge=true
+        material.transparent=true
+        const previous=material.onBeforeCompile
+        material.onBeforeCompile=(shader:THREE.WebGLProgramParametersWithUniforms,renderer:THREE.WebGLRenderer)=>{
+          previous.call(material,shader,renderer)
+          shader.uniforms.portraitBottom={value:bounds.min.y}
+          shader.vertexShader='varying float portraitY;\n'+shader.vertexShader.replace('#include <project_vertex>','#include <project_vertex>\nportraitY=(modelMatrix*vec4(transformed,1.)).y;')
+          shader.fragmentShader='varying float portraitY; uniform float portraitBottom;\n'+shader.fragmentShader.replace('#include <alphatest_fragment>','diffuseColor.a *= smoothstep(portraitBottom,portraitBottom+5.5,portraitY);\n#include <alphatest_fragment>')
+        }
+        material.needsUpdate=true
+      }
+    })
+  })
   const focusRef = useRef(new THREE.Vector3(0, 1.3, 0))
   const frameRef = useRef(0)
   // 逐锚点景深（intro3d 导出的 glb 携带）：Man2 每帧写、Post2 读。dofBokeh=-1 表示无参数 → Post2 走旧全局混合。
@@ -635,14 +640,14 @@ export default function Scene() {
   const dofRangeRef = useRef(0.15)
   return (
     <>
-      <GradientBackground />
+
 
       <Suspense fallback={null}>
         <Lights />
-        <Man2 focusRef={focusRef} frameRef={frameRef} dofBokehRef={dofBokehRef} dofRangeRef={dofRangeRef} />
+        <group ref={portrait}><Man2 home={home} focusRef={focusRef} frameRef={frameRef} dofBokehRef={dofBokehRef} dofRangeRef={dofRangeRef} /></group>
       </Suspense>
 
-      <Post2 focusRef={focusRef} frameRef={frameRef} dofBokehRef={dofBokehRef} dofRangeRef={dofRangeRef} />
+      {!low && <Post2 focusRef={focusRef} frameRef={frameRef} dofBokehRef={dofBokehRef} dofRangeRef={dofRangeRef} />}
     </>
   )
 }
