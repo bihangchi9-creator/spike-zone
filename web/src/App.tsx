@@ -9,6 +9,7 @@ import VesselShowcase from './qa/VesselShowcase'
 import Capture from './qa/Capture'
 import PromoIntro from './qa/PromoIntro'
 import PromoStudio from './qa/PromoStudio'
+import HarborReview from './qa/HarborReview'
 import FrameDiagnostics from './universe/FrameDiagnostics'
 const capture = import.meta.env.DEV && new URLSearchParams(window.location.search).has('capture')
 const diagnostics = new URLSearchParams(window.location.search).has('diagnostics')
@@ -228,4 +229,4 @@ function Portfolio() {
   )
 }
 
-export default function App(){if(import.meta.env.DEV&&new URLSearchParams(location.search).has('promo-studio'))return <PromoStudio/>;if(import.meta.env.DEV && new URLSearchParams(location.search).has('world'))return <WorldShowcase/>;if(import.meta.env.DEV && new URLSearchParams(location.search).has('hyundai'))return <HyundaiShowcase/>;return import.meta.env.DEV && new URLSearchParams(location.search).has('vessel') ? <VesselShowcase/> : <Portfolio/>}
+export default function App(){if(import.meta.env.DEV&&new URLSearchParams(location.search).has('harbor-review'))return <HarborReview/>;if(import.meta.env.DEV&&new URLSearchParams(location.search).has('promo-studio'))return <PromoStudio/>;if(import.meta.env.DEV && new URLSearchParams(location.search).has('world'))return <WorldShowcase/>;if(import.meta.env.DEV && new URLSearchParams(location.search).has('hyundai'))return <HyundaiShowcase/>;return import.meta.env.DEV && new URLSearchParams(location.search).has('vessel') ? <VesselShowcase/> : <Portfolio/>}

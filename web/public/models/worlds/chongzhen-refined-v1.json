@@ -1,0 +1,26 @@
+[
+  {
+    "filename": "chongzhen-refined-v1.glb",
+    "bytes": 16349212,
+    "meshes": 53,
+    "triangles": 528004,
+    "assemblies": [
+      "architecture_and_props",
+      "harbor_workboat_1",
+      "harbor_workboat_2",
+      "idea_courier_static"
+    ]
+  },
+  {
+    "filename": "chongzhen-refined-v1-low.glb",
+    "bytes": 4460900,
+    "meshes": 53,
+    "triangles": 113868,
+    "assemblies": [
+      "architecture_and_props",
+      "harbor_workboat_1",
+      "harbor_workboat_2",
+      "idea_courier_static"
+    ]
+  }
+]

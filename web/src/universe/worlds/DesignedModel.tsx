@@ -4,6 +4,7 @@ import {useFrame} from '@react-three/fiber'
 import * as T from 'three'
 import {useSpace} from '../state'
 import WorldSigns from './WorldSigns'
+import HarborRefined from './HarborRefined'
 import MotorSurfaceLights from './MotorSurfaceLights'
 import {ProjectPath} from './WorldEffects'
 import {STOPS} from './catalog'
@@ -12,7 +13,7 @@ import {motorRoad} from './builders/motor'
 const vertex=`varying vec2 v;void main(){v=uv;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}`
 function Sign({id}:{id:string}){const map=useTexture(`${import.meta.env.BASE_URL}models/worlds/${id==='university'?'dut-official-vi.png':'hyundai-ci.jpg'}`);return <mesh position={id==='university'?[-1.65,5.06,5.38]:[-3.9,5.23,7.11]}><planeGeometry args={id==='university'?[.91,.91]:[4.3,.7]}/><shaderMaterial uniforms={{map:{value:map},dut:{value:id==='university'?1:0}}} vertexShader={vertex} fragmentShader={`varying vec2 v;uniform sampler2D map;uniform float dut;void main(){vec2 uv=dut>.5?vec2(.37+v.x*.29,.535+v.y*.275):vec2(.06+v.x*.88,.37+v.y*.26);vec3 c=texture2D(map,uv).rgb;gl_FragColor=vec4(c,1.);}`}/></mesh>}
 function Shell(){return <mesh raycast={()=>{}}><sphereGeometry args={[10.05,48,32]}/><shaderMaterial transparent depthWrite={false} side={T.FrontSide} blending={T.AdditiveBlending} vertexShader={`varying vec3 n;varying vec3 eye;void main(){vec4 mv=modelViewMatrix*vec4(position,1.);n=normalize(normalMatrix*normal);eye=normalize(-mv.xyz);gl_Position=projectionMatrix*mv;}`} fragmentShader={`varying vec3 n;varying vec3 eye;void main(){float f=pow(1.-abs(dot(normalize(n),normalize(eye))),4.5);gl_FragColor=vec4(.14,.65,.5,f*.48);}`}/></mesh>}
-export default function DesignedModel({id,selected=null,action=0,paused=false,near=true,follow}:{id:string;selected?:string|null;action?:number;paused?:boolean;near?:boolean;follow?:MutableRefObject<number|null>}){
+function LegacyModel({id,selected=null,action=0,paused=false,near=true,follow}:{id:string;selected?:string|null;action?:number;paused?:boolean;near?:boolean;follow?:MutableRefObject<number|null>}){
  const low=useSpace(s=>s.low)
  const {scene}=useGLTF(`${import.meta.env.BASE_URL}models/worlds/${id}${near&&!low?'':'-low'}.glb?v=refined-worlds-1`),model=useMemo(()=>{const copy=scene.clone(true);const mats=new Map<T.Material,T.Material>();copy.traverse(o=>{if(o instanceof T.Mesh){const old=o.material as T.Material;if(!mats.has(old))mats.set(old,old.clone());o.material=mats.get(old)!;o.castShadow=true;o.receiveShadow=true}});return copy},[scene]),time=useRef(0),effect=useRef(0),lastAction=useRef(action),screen=useMemo(()=>({time:{value:0},signalOn:{value:0}}),[]),space=useSpace()
  const path=useMemo(()=>new T.CatmullRomCurve3(motorRoad.map(q=>new T.Vector3(...q)),true),[])
@@ -27,3 +28,5 @@ export default function DesignedModel({id,selected=null,action=0,paused=false,ne
  {id==='hyundai'&&<mesh position={[3.25,7.45,-.909]}><planeGeometry args={[2.23,.4]}/><shaderMaterial uniforms={screen} vertexShader={vertex} fragmentShader={`varying vec2 v;uniform float time;void main(){float wave=.5+sin(v.x*18.-time)*.25*sin(v.x*3.14159);float a=exp(-abs(v.y-wave)*40.);gl_FragColor=vec4(vec3(.005,.02,.06)+vec3(.12,.5,1.)*a,1.);}`}/></mesh>}
  </group>
 }
+
+export default function DesignedModel(props:Parameters<typeof LegacyModel>[0]&{legacy?:boolean}){return props.id==='chongzhen'&&!props.legacy?<><HarborRefined near={props.near}/><WorldSigns id="chongzhen-refined"/></>:<LegacyModel {...props}/>}
