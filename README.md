@@ -14,7 +14,7 @@
   <a href="https://bihangchi9-creator.github.io/spike-zone/">🌐 在线访问</a>
 </p>
 
-我是 **毕航驰（Spike）**，目前在字节跳动做模型运营，方向是把业务 SOP 沉淀为可复用的 AI 能力（Skill / Harness / 垂类 Agent）。
+我是 **毕航驰（Spike）**，目前在字节跳动做模型运营，关注模型应用、工作流设计与效率提升。站内相关项目以脱敏后的职责与方法概述呈现。
 
 这是我的个人 3D 简历网站：一层随滚动运镜的 3D 人物背景 + 一层可滚动的内容（About → 履历 → 作品集）。纯前端 SPA，构建产物是静态文件，部署在 GitHub Pages。
 

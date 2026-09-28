@@ -29,10 +29,10 @@ export const RESUME: Record<'en' | 'zh', { title: string; entries: ResumeEntry[]
         place: 'ByteDance',
         role: 'Model Operations',
         points: [
-          'Turn business needs into executable flows, tools and agentic workflows — focused on content generation & judgment',
-          'Distilled a general path: business SOP → Skill → Harness → vertical Agent',
-          'Deep work on LLM / multimodal Agent engineering & quality governance: model migration, Trace attribution, quality gates, human-in-loop',
-          'Drive complex business projects from design to delivery via AI coding',
+          'Translate user needs into AI-assisted workflows and tools',
+          'Develop reusable tools for content generation and quality evaluation',
+          'Work on LLM and multimodal applications, model adaptation, evaluation and human–AI collaboration',
+          'Use AI coding to move projects from solution design to delivery',
         ],
       },
       {
@@ -79,10 +79,10 @@ export const RESUME: Record<'en' | 'zh', { title: string; entries: ResumeEntry[]
         place: '字节跳动',
         role: '模型运营',
         points: [
-          '把业务需求转化为可执行的流程、工具与智能工作流，聚焦内容生成与内容判断两大场景',
-          '沉淀「业务 SOP → Skill → Harness → 垂类 Agent」的通用产品化路径',
-          '深度参与 LLM / 多模态 Agent 的工程化与质量治理：模型迁移调优、Trace 归因、质量门禁、人在回路',
-          '以 AI Coding 驱动复杂业务项目从方案设计走向交付',
+          '把使用需求转化为 AI 辅助流程与工具，关注模型应用提效',
+          '围绕内容生成与质量评估，沉淀可复用的工具与方法',
+          '参与 LLM / 多模态应用的工程化实践，开展模型适配、效果评估与人机协同设计',
+          '通过 AI Coding 推进项目从方案设计走向交付',
         ],
       },
       {

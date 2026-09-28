@@ -34,7 +34,7 @@ function SectionCard({
   onOpen: (item: WorkListItem) => void
 }) {
   const studies: Record<string, string[]> = {
-    bytedance: [data === WORKS.en ? 'Business SOP' : '业务 SOP', 'Skill / Harness', 'Agent'],
+    bytedance: data === WORKS.en ? ['User needs', 'Workflows', 'Evaluation'] : ['需求拆解', '工作流', '模型评估'],
     opensource: [data === WORKS.en ? 'Feishu' : '飞书', data === WORKS.en ? 'Bridge' : '桥接', 'Coding Agent'],
     intern: data === WORKS.en ? ['Music', 'AI', 'Cockpit'] : ['音乐', 'AI', '座舱体验'],
   }

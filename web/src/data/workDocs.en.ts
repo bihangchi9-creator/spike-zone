@@ -1,40 +1,30 @@
 import type { WorkDoc } from './workDocs'
 export const englishDocs:Record<string,WorkDoc> = {
- 'material-gen-agent':{slug:'material-gen-agent',title:'Material Generation Agent',year:'2026',role:'Independent ownership · Design to delivery',tags:['LLM','Agent','Prompt','AI productization'],body:`Turning repetitive content packaging into a reusable generation agent.
+ 'material-gen-agent':{slug:'material-gen-agent',title:'Content Generation Assistant',year:'2026',role:'Independent ownership · Design to delivery',tags:['LLM','Agent','Prompt','AI productization'],body:`Turning repetitive content organization and writing into reusable AI-assisted workflows.
 
-The commercial growth team regularly turns completed project materials into standardized case studies and promotional assets. The manual process requires sorting source materials, structuring a narrative, selecting templates, filling content and checking layouts. It is time-consuming and inconsistent, while unconstrained generation can distort facts and break layouts.
+I independently owned requirements analysis, solution design and implementation. I combined prompts, workflow orchestration and programmatic validation to make model output better suited to user needs.
 
-I independently designed and delivered the workflow as four reusable Skills: **material processing → case narrative → template filling → quality checks**, assembled through a Harness into a domain-specific Agent. The architecture separates **semantic judgment by the model** from **deterministic code** for formatting, layout and source validation. Key metrics have source tiers and human confirmation gates.
+This work gave me practical experience delivering generative AI applications and sharpened my understanding of content quality, maintainability and human review.`},
+ 'material-qc-agent':{slug:'material-qc-agent',title:'Assisted Content Quality Checks',year:'2026',role:'Led the redesign',tags:['LLM','Multimodal','Rule-based validation','Quality evaluation'],body:`Combining rule-based validation and model capabilities to assist content quality checks.
 
-The project saved work hours and established a reusable path from business SOP to Skill, Harness and domain-specific Agent.`},
- 'material-qc-agent':{slug:'material-qc-agent',title:'Material QC Agent',year:'2026',role:'Led the redesign',tags:['LLM','Multimodal','Rule engine','Risk governance'],body:`A rule-and-model judgment engine for multiple review scenarios.
+Building on an existing solution, I led a redesign, clarified different user needs, separated programmatic checks from model judgment, and improved result feedback and human review.
 
-Commercial growth teams submit materials under different rules. Reviewers must check fields, text, links, dates, attachments and image risks. The previous workflow covered only one scenario and was difficult to use.
+This experience developed my ability to turn scattered requirements into extensible tools and to evaluate where model capabilities are useful.`},
+ 'audit-model-migration':{slug:'audit-model-migration',title:'Model Adaptation and Evaluation',year:'2026',role:'Independent delivery',tags:['Model adaptation','Prompt tuning','Error analysis','Quality evaluation'],body:`Adapting applications and evaluating quality as model versions change.
 
-Building on the initial concept, I led a redesign that converted multiple review SOPs into an extensible QC Skill, assembled into a domain-specific Agent through a Harness. An **explicit scenario index** routes requests and stops on unsupported or ambiguous scenarios. **Deterministic code** checks format, counts, dates, URLs and image metadata. Semantic and visual judgments are limited to defined rule dimensions. High-risk authorization, legal and rights questions are sent for human confirmation.
+I independently handled problem analysis and iterative tuning. I compared samples, examined model calls and adjusted prompts to assess application behavior, then documented reusable evaluation methods.
 
-The project covers multiple review scenarios and was delivered for operational testing as a judgment-engine pilot alongside the generation engine.`},
- 'audit-model-migration':{slug:'audit-model-migration',title:'Content-Audit Model Migration',year:'2026',role:'Independent delivery',tags:['Model migration','Trace attribution','Quality gates','Harness'],body:`Restoring review accuracy and automation after a base-model upgrade.
+This work reinforced the value of verifiable changes and matching model capabilities to practical needs.`},
+ 'multimodal-audit-workflow':{slug:'multimodal-audit-workflow',title:'Multimodal Information Workflow',year:'2026',role:'Independent delivery',tags:['Multimodal','LLM','Workflow design','Quality evaluation'],body:`Organizing text and images into a structured model workflow.
 
-A high-volume content-review Agent saw automation and sampled accuracy fall after its foundation model was upgraded. The workflow contained many model nodes, and adding prompts without diagnosis simply moved false positives and false negatives between samples.
+I independently designed and implemented the workflow, clarified responsibilities across inputs, model processing and results, and used programmatic validation to handle invalid inputs and output-format issues.
 
-I independently ran dozens of **reversible iterations**, changing one sub-cause at one node per round and reverting whenever the quality gate failed. **Traces identified the responsible node**, while evaluation constrained false negatives, false positives, automation and accuracy degradation together.
+This experience developed my multimodal engineering skills and strengthened my focus on workflow reliability and traceable results.`},
+ 'performance-qc':{slug:'performance-qc',title:'Human–AI Quality Review',year:'2026',role:'Built independently',tags:['Agent reuse','Human in the loop','Workflow design'],body:`Exploring how AI-assisted checks can work alongside human review.
 
-Within the observed business window, high-volume automated review resumed and sampled accuracy returned to a high level. The process became a reusable review-tuning Harness.`},
- 'multimodal-audit-workflow':{slug:'multimodal-audit-workflow',title:'Multimodal Content-Audit Workflow',year:'2026',role:'Independent delivery',tags:['Multimodal','LLM','Workflow architecture','Quality evaluation'],body:`An automated review workflow combining text, images and product evidence.
+I reused existing workflow capabilities, reorganized tasks and result feedback for new quality-checking needs, and independently built an assistant that retained human participation and review.
 
-Low-quality content review must consider text, images and product details while reducing false positives and increasing automation. Broken image links, overlapping model responsibilities and unstable output make the workflow fragile.
-
-I built the complete chain: **field extraction → product-evidence normalization → product profile → visual/content models → deterministic merging → a single output**. Model responsibilities are separated. Code nodes validate types, enumerations and conflicts, and catch invalid links before known-bad inputs reach a model.
-
-At staged acceptance, the workflow maintained traceable, reversible quality control alongside high automation.`},
- 'performance-qc':{slug:'performance-qc',title:'Performance Sampling AI QC',year:'2026',role:'Built independently',tags:['Agent reuse','Human in the loop','Workflow migration'],body:`Automatically resolve agreement; return disagreement to a human.
-
-A large performance-sampling backlog required people to inspect, judge and record every item, resulting in long cycles and limited coverage.
-
-I reused the skeleton of an existing review workflow and reorganized its judgment and output logic for quality checking. **Agreement between the model and the human judgment is processed automatically; disagreement returns to a human.** The Agent is live and continues to process work.
-
-The project demonstrates reuse across review and QC scenarios, with deliberate allocation of risk and humans retained in the loop.`},
+This work demonstrates my experience adapting tools to new contexts and thinking through the division of work between automation and human judgment.`},
  'dsh-lark-bridge':{slug:'dsh-lark-bridge',title:'dsh-lark-bridge',year:'2026',role:'Independent open source · Concept to implementation',tags:['AI coding','Agent control plane','Product design','Permissions'],link:'https://github.com/bihangchi9-creator/dsh-lark-bridge',body:`Making Feishu a native front end and operating interface for Agents.
 
 I independently conceived and built this open-source project. Feishu group messages drive Agents with project directories, tools and persistent sessions, with different groups mapped to different workspaces. I owned the product decisions, AI-coding-driven implementation and acceptance, and continue to update the project on GitHub.

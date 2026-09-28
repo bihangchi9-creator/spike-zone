@@ -15,7 +15,7 @@ const shots=[
  {id:'university',kicker:'01 / 学习与好奇',title:'故事，从校园开始',sub:'大连理工 · 自动化 · 数字人实验室',seconds:9},
  {id:'chongzhen',kicker:'02 / 从想法到产品',title:'让想法，有落地的地方',sub:'崇振时代 · 多 Agent 内容产品与 AI 辅助设计',seconds:9},
  {id:'hyundai',kicker:'03 / 体验与感知',title:'让音乐，成为看得见的体验',sub:'现代汽车 · 智能座舱 · AI 音乐壁纸',seconds:9},
- {id:'bytedance',kicker:'04 / 系统与交付',title:'把复杂需求，变成可运行的系统',sub:'字节跳动 · 模型运营 · 生成、判断与质量治理',seconds:9},
+ {id:'bytedance',kicker:'04 / 系统与交付',title:'把复杂需求，变成可运行的系统',sub:'字节跳动 · 模型运营 · 模型应用与效率提升',seconds:9},
  {id:'opensource',kicker:'05 / 持续生长',title:'把连接，留给更多人',sub:'开源探索 · dsh-lark-bridge · trae-to-lark',seconds:9},
  {id:'outro',kicker:'THE NEXT CHAPTER',title:'毕航驰 Spike',sub:'重复是最好的老师。行动起来。',seconds:11},
 ]
