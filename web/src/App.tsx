@@ -7,10 +7,16 @@ import WorldShowcase from './qa/WorldShowcase'
 import HyundaiShowcase from './qa/HyundaiShowcase'
 import VesselShowcase from './qa/VesselShowcase'
 import Capture from './qa/Capture'
+import RenderDiagnostics,{RenderDiagnosticPanel} from './qa/RenderDiagnostics'
+import {renderDiagnostic} from './qa/renderDiagnosticSession'
 import PromoIntro from './qa/PromoIntro'
 import PromoStudio from './qa/PromoStudio'
 import HarborReview from './qa/HarborReview'
+import RefinementReview from './qa/RefinementReview'
 import FrameDiagnostics from './universe/FrameDiagnostics'
+import FrameProbe,{FrameProbePanel} from './qa/FrameProbe'
+import {mainWorldRevision} from './universe/worlds/modelRevisions'
+const qaMetrics = import.meta.env.DEV && new URLSearchParams(window.location.search).get('qa-metrics') === '1'
 const capture = import.meta.env.DEV && new URLSearchParams(window.location.search).has('capture')
 const diagnostics = new URLSearchParams(window.location.search).has('diagnostics')
 import NoiseOverlay from './ui/NoiseOverlay'
@@ -19,6 +25,7 @@ import Works from './ui/Works'
 import LoadingScreen from './ui/LoadingScreen'
 import Universe from './universe/Universe'
 import RenderBudget from './universe/RenderBudget'
+import {useMainRenderDpr} from './universe/useMainRenderDpr'
 import EntryConstellation from './universe/EntryConstellation'
 import Flight from './universe/Flight'
 import type { Journey } from './universe/cinematic'
@@ -97,7 +104,14 @@ function Portfolio() {
   const [mode, setMode] = useState<'home' | 'launch' | 'space' | 'return'>('home')
   const [ready, setReady] = useState(false)
   const low = useSpace(s => s.low)
+  const renderDpr = useMainRenderDpr(low)
   const exploring = useSpace(s=>s.exploring)
+  const [metricsSample,setMetricsSample] = useState(0)
+  const metricsReduced = useSpace(s=>qaMetrics&&s.reduced)
+  const metricsPaused = useSpace(s=>qaMetrics&&(!!s.panel||!!s.project))
+  const metricsContext = useSpace(s=>qaMetrics?`${s.panel||''}:${s.project||''}:${s.destination||''}:${s.nearest||''}:${s.race}:${s.resetFlight}`:'')
+  const metricsKey = `${mode}:${ready}:${low}:${metricsPaused}:${metricsReduced}:${metricsContext}`
+  const metricsRevision = qaMetrics ? `bytedance:${new URLSearchParams(location.search).get('hub-version')==='v1'?'v1':'v2'};natural:${mainWorldRevision('university')};chongzhen:v3.2` : ''
   const journey = useRef<Journey>({ portrait: 1, progress: 0 })
   const savedScroll = useRef(0)
   const skipIntro = useRef(false)
@@ -147,21 +161,26 @@ function Portfolio() {
       {/* 加载遮罩：模型全部加载完成前覆盖全屏，完成后淡出 */}
       <LoadingScreen />{import.meta.env.DEV&&new URLSearchParams(location.search).has('promo-intro')&&<style>{'.scene-bg{width:1280px!important;height:720px!important;right:auto!important;bottom:auto!important}'}</style>}
       {capture && !new URLSearchParams(location.search).has('promo-intro') && <Capture />}{import.meta.env.DEV&&new URLSearchParams(location.search).has('promo-intro')&&<PromoIntro launch={enterSpace}/>}
-      {diagnostics && <output id="frame-diagnostics" style={{position:"fixed",bottom:0,left:0,zIndex:10000,background:"#000",color:"#fff",fontSize:11,pointerEvents:"none"}}/>}
+      {renderDiagnostic.enabled && <RenderDiagnosticPanel owner={renderDpr.owner} onParentUpdate={()=>setMetricsSample(n=>n+1)}/>}
+      {diagnostics && !qaMetrics && <output id="frame-diagnostics" style={{position:"fixed",bottom:0,left:0,zIndex:10000,background:"#000",color:"#fff",fontSize:11,pointerEvents:"none"}}/>}
+
+      {qaMetrics && !exploring && <FrameProbePanel floating outputId="frame-diagnostics" resetKey={`${metricsKey}:${metricsSample}`} onResample={()=>setMetricsSample(n=>n+1)}/>}
 
       {/* 固定的 3D 背景 */}
       <div className="scene-bg" style={{ pointerEvents: mode === 'space' ? 'auto' : 'none' }}>
         <Canvas
           frameloop={exploring ? 'never' : 'always'}
           shadows={{ type: THREE.PCFShadowMap }}
-          dpr={low ? 1 : [1, 1.5]}
+          dpr={renderDpr.dpr}
           camera={{ position: [0, 5, 19], fov: 39, near: 0.1, far: 4000 }}
           gl={{ preserveDrawingBuffer: capture, antialias: false, stencil: false, depth: true, toneMapping: THREE.ACESFilmicToneMapping }}
         >
-          {diagnostics && <FrameDiagnostics mode={mode} />}
-          <RenderBudget/>
+          {diagnostics && !qaMetrics && <FrameDiagnostics mode={mode} />}
+          <RenderBudget owner={renderDpr.owner}/>
+          {renderDiagnostic.enabled && <RenderDiagnostics owner={renderDpr.owner}/>}
           <color attach="background" args={['#0a0e16']} />
           <Suspense fallback={null}>
+            {qaMetrics && !exploring && <FrameProbe stage={mode} model={mode==='home'?'portfolio-scene':'five-worlds'} revision={metricsRevision} quality={low?'light':'detailed'} view={mode} paused={metricsPaused} reduced={metricsReduced} resetKey={metricsKey} sampleToken={metricsSample} cameraMotion outputId="frame-diagnostics"/>}
             <Universe journey={journey} active={mode === 'space' && ready} portrait={mode === 'home' || mode === 'launch' || mode === 'return'} lang={lang} />
             <Scene home={mode === 'home'} journey={journey} />
             <EntryConstellation mode={mode} journey={journey}/>
@@ -229,4 +248,4 @@ function Portfolio() {
   )
 }
 
-export default function App(){if(import.meta.env.DEV&&new URLSearchParams(location.search).has('harbor-review'))return <HarborReview/>;if(import.meta.env.DEV&&new URLSearchParams(location.search).has('promo-studio'))return <PromoStudio/>;if(import.meta.env.DEV && new URLSearchParams(location.search).has('world'))return <WorldShowcase/>;if(import.meta.env.DEV && new URLSearchParams(location.search).has('hyundai'))return <HyundaiShowcase/>;return import.meta.env.DEV && new URLSearchParams(location.search).has('vessel') ? <VesselShowcase/> : <Portfolio/>}
+export default function App(){if(import.meta.env.DEV&&new URLSearchParams(location.search).has('refinement-review'))return <RefinementReview/>;if(import.meta.env.DEV&&new URLSearchParams(location.search).has('harbor-review'))return <HarborReview/>;if(import.meta.env.DEV&&new URLSearchParams(location.search).has('promo-studio'))return <PromoStudio/>;if(import.meta.env.DEV && new URLSearchParams(location.search).has('world'))return <WorldShowcase/>;if(import.meta.env.DEV && new URLSearchParams(location.search).has('hyundai'))return <HyundaiShowcase/>;return import.meta.env.DEV && new URLSearchParams(location.search).has('vessel') ? <VesselShowcase/> : <Portfolio/>}

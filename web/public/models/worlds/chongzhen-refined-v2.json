@@ -1,0 +1,32 @@
+[
+  {
+    "filename": "chongzhen-refined-v2.glb",
+    "bytes": 11759888,
+    "rawBytes": 17310472,
+    "meshes": 55,
+    "triangles": 428805,
+    "radius": 12.1611,
+    "quantization": "16-bit positions, 10-bit normals; no external decoder",
+    "assemblies": [
+      "architecture_and_props",
+      "harbor_workboat_1",
+      "harbor_workboat_2",
+      "idea_courier_static"
+    ]
+  },
+  {
+    "filename": "chongzhen-refined-v2-low.glb",
+    "bytes": 5362572,
+    "rawBytes": 8281928,
+    "meshes": 55,
+    "triangles": 139821,
+    "radius": 12.1611,
+    "quantization": "16-bit positions, 10-bit normals; no external decoder",
+    "assemblies": [
+      "architecture_and_props",
+      "harbor_workboat_1",
+      "harbor_workboat_2",
+      "idea_courier_static"
+    ]
+  }
+]

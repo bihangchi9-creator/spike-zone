@@ -4,6 +4,9 @@ import { useGLTF } from '@react-three/drei'
 import { EffectComposer, Bloom, DepthOfField, SMAA } from '@react-three/postprocessing'
 import * as THREE from 'three'
 import Env from './Env'
+import {ComposerDiagnostic} from '../qa/RenderDiagnostics'
+import {renderDiagnostic} from '../qa/renderDiagnosticSession'
+import ComposerSizeSync from './ComposerSizeSync'
 import { fadeGroup, type Journey } from '../universe/cinematic'
 import { useSpace } from '../universe/state'
 import { FOCUS_POINTS, FRAMES_PER_NODE } from '../data/focusPoints'
@@ -582,6 +585,8 @@ function Post2({
 
   return (
     <EffectComposer multisampling={0} stencilBuffer={false} depthBuffer>
+      <ComposerSizeSync/>
+      {renderDiagnostic.enabled && <ComposerDiagnostic/>}
       {(post.dof ? (
         <DepthOfField
           ref={dofRef}

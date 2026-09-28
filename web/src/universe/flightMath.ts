@@ -25,11 +25,11 @@ export function sphereContact(position: Vector, velocity: Vector, center: Vector
 
 export type NavigationBody={position:Vector;radius:number}
 // Visibility graph around expanded spheres. Only five bodies; replanned at a bounded cadence.
-export function navigationPath(start:Vector,end:Vector,bodies:NavigationBody[]):Vector[]{
+export function navigationPath(start:Vector,end:Vector,bodies:NavigationBody[],clearance=1.5):Vector[]{
  const distance=(a:Vector,b:Vector)=>Math.hypot(...a.map((v,i)=>v-b[i]))
  const clear=(a:Vector,b:Vector)=>bodies.every(({position:c,radius:r})=>{
   const da=distance(a,c),db=distance(b,c),radius=r+12
-  if(da<radius||db<radius){const from=da<db?a:b,to=da<db?b:a;return Math.min(da,db)>r+1.5&&to.reduce((sum,v,i)=>sum+(v-from[i])*(from[i]-c[i]),0)>=0&&!segmentTouchesSphere(a,b,c,r+1.5)}
+  if(da<radius||db<radius){const from=da<db?a:b,to=da<db?b:a;return Math.min(da,db)>r+clearance&&to.reduce((sum,v,i)=>sum+(v-from[i])*(from[i]-c[i]),0)>=0&&!segmentTouchesSphere(a,b,c,r+clearance)}
   return !segmentTouchesSphere(a,b,c,radius)
  })
  if(clear(start,end))return [start,end]

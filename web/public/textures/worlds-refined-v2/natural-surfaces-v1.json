@@ -1,0 +1,30 @@
+{
+  "source": "blender/five-worlds/natural-surface-textures-v2.py",
+  "resolution": [
+    512,
+    512
+  ],
+  "normalConvention": "tangent-space +Z; linear texture; no color-space conversion",
+  "files": [
+    {
+      "name": "natural-water-normal-v1.png",
+      "bytes": 221635,
+      "sha256": "74c125eead17427faa09a49e43245b22a495c7429377ed4e17b0bb49e5ba281f"
+    },
+    {
+      "name": "natural-water-rough-v1.jpg",
+      "bytes": 18524,
+      "sha256": "f34a9d918849e0b8305954f83ce7fa9adb57ed98b7ccdaea14a54242a9cf2991"
+    },
+    {
+      "name": "natural-rock-normal-v1.png",
+      "bytes": 266976,
+      "sha256": "c8213eac2739990a3a5d6a10d65d748fa83692b9ec9c0c2f13734d0b3f457353"
+    },
+    {
+      "name": "natural-rock-rough-v1.jpg",
+      "bytes": 17125,
+      "sha256": "d4bea7c563cff25a79d7b364ce41a5cd7e1901dcab8bcb8fc22c1ed44717f7a8"
+    }
+  ]
+}

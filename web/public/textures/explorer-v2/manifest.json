@@ -1,0 +1,53 @@
+{
+  "text": [
+    "Spike",
+    "毕航驰"
+  ],
+  "source": "blender/explorer/textures-v2.py",
+  "font_files": {
+    "Spike": "/System/Library/Fonts/Supplemental/Arial Bold Italic.ttf",
+    "毕航驰": "/System/Library/Fonts/STHeiti Medium.ttc"
+  },
+  "files": [
+    {
+      "name": "bihangchi-nameplate.png",
+      "sha256": "c71d4f03ef06e4299214c2e794a87c0f61281b11395afb0c009d3b91aedc7b8c",
+      "size": [
+        1024,
+        256
+      ]
+    },
+    {
+      "name": "seat-roughness.png",
+      "sha256": "516e8b21ff19e53d18a092752bca484a7afd99ddd8b9ed27bfa35cda02fd607b",
+      "size": [
+        512,
+        512
+      ]
+    },
+    {
+      "name": "spike-wordmark.png",
+      "sha256": "054049cf4bc26b5aa425eae97a16ea0f89b272ff26fe98d31494cf2637c75286",
+      "size": [
+        1024,
+        256
+      ]
+    },
+    {
+      "name": "paint-roughness.png",
+      "sha256": "31b4d7e8a992aebd7a5af874a843826e86c9b6f06cddf934ca395eab11e62d93",
+      "size": [
+        512,
+        512
+      ]
+    },
+    {
+      "name": "titanium-roughness.png",
+      "sha256": "a6e8ab19a63e2532ac2c4806d1ade90de569962fe8647cada701957476b5b0cf",
+      "size": [
+        512,
+        512
+      ]
+    }
+  ]
+}

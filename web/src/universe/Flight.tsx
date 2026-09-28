@@ -8,6 +8,7 @@ import { fadeGroup, useReducedMotion, type WorldMode, type Journey } from './cin
 import * as THREE from 'three'
 import { WORLDS, projectWorld, worldFor, RACE, SHARDS, SECRET, type V3 } from './data'
 import Vessel from './Vessel'
+import { VESSEL_V2 } from './vesselDesignV2'
 import { launchFrame } from './visualMath'
 import { segmentTouchesSphere, sphereContact, navigationPath } from './flightMath'
 import { clearInput, flightInput as input, useSpace } from './state'
@@ -99,7 +100,7 @@ export default function Flight({mode,journey,onReady,onReturned,skipIntro}:{skip
     const dock=dockOf(destination),remaining=v.p.distanceTo(tmp.target.set(...dock))
     route.current.age+=dt
     if(remaining<2){s.visit(destination.id);v.docked=destination.id;v.p.set(...dock);const focus=positionOf(destination);v.yaw=Math.atan2(-(focus[0]-v.p.x),-(focus[2]-v.p.z));s.navigate(null);v.velocity.set(0,0,0)}else{
-     if(route.current.id!==destination.id||route.current.age>.6){route.current={id:destination.id,age:0,path:navigationPath(v.p.toArray() as V3,dock,WORLDS.map(w=>({position:positionOf(w),radius:w.radius}))).slice(1)}}
+     if(route.current.id!==destination.id||route.current.age>.6){route.current={id:destination.id,age:0,path:navigationPath(v.p.toArray() as V3,dock,WORLDS.map(w=>({position:positionOf(w),radius:w.radius})),VESSEL_V2.navigationClearance).slice(1)}}
      while(route.current.path.length>1&&v.p.distanceTo(tmp.target.set(...route.current.path[0]))<12)route.current.path.shift()
      if(route.current.path.length===1)route.current.path[0]=dock
      const waypoint=route.current.path[0]
@@ -122,7 +123,7 @@ export default function Flight({mode,journey,onReady,onReturned,skipIntro}:{skip
     if(v.velocity.length()>max)v.velocity.setLength(max)
    }
    v.p.addScaledVector(v.velocity,dt)
-   for(const p of WORLDS){const contact=sphereContact(v.p.toArray() as V3,v.velocity.toArray() as V3,positionOf(p),p.radius+1.8);if(contact){v.p.set(...contact.position);v.velocity.set(...contact.velocity);s.navigate(null);v.docked=null}}
+   for(const p of WORLDS){const contact=sphereContact(v.p.toArray() as V3,v.velocity.toArray() as V3,positionOf(p),p.radius+VESSEL_V2.collisionRadius);if(contact){v.p.set(...contact.position);v.velocity.set(...contact.velocity);s.navigate(null);v.docked=null}}
    for(const g of WORLDS)if(v.p.distanceTo(tmp.target.set(...positionOf(g)))<g.radius+40)s.visit(g.id)
    tmp.target.set(...SYSTEM.center);if(v.p.distanceTo(tmp.target)>SYSTEM.boundary){v.p.sub(tmp.target).setLength(SYSTEM.boundary-1).add(tmp.target);v.docked=null;v.velocity.multiplyScalar(-.2);s.update({notice:'boundary'});s.navigate(null)}
    SHARDS.forEach((p,i)=>{if(segmentTouchesSphere(tmp.before.toArray() as V3,v.p.toArray() as V3,p,3))s.collect(i)})

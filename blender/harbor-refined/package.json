@@ -1,0 +1,11 @@
+{
+  "name": "chongzhen-harbor-source",
+  "private": true,
+  "type": "module",
+  "description": "Optional build-time GLB optimization for the editable Chongzhen scene",
+  "dependencies": {
+    "@gltf-transform/core": "4.4.2",
+    "@gltf-transform/extensions": "4.4.2",
+    "@gltf-transform/functions": "4.4.2"
+  }
+}

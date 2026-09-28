@@ -1,0 +1,8 @@
+{
+  "source": "交付物/字节AI工坊星球-v1-20260920/官网参考.html",
+  "element": "header a.logo > img[data:image/png;base64]",
+  "sha256": "a500bdd269da409df570a6b6dd6cfc5d194f2f0e0e5d1966f947369c9116009d",
+  "width": 717,
+  "height": 184,
+  "note": "Decoded original embedded PNG without tracing, cropping, or generated lettering."
+}
