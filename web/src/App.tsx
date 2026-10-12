@@ -36,6 +36,18 @@ import { useSkyEntry } from './universe/useSkyEntry'
 
 type Lang = 'en' | 'zh'
 
+function getInitialLang(): Lang {
+  if (typeof window === 'undefined') return 'zh'
+  try {
+    const saved = window.localStorage.getItem('spike-language')
+    if (saved === 'en' || saved === 'zh') return saved
+  } catch {
+    // Fall back to the browser language when storage is unavailable.
+  }
+  const preferred = window.navigator.languages?.[0] || window.navigator.language
+  return preferred?.toLowerCase().startsWith('en') ? 'en' : 'zh'
+}
+
 const COPY = {
   en: {
     title: 'Spike',
@@ -93,14 +105,14 @@ function Hero({ lang, cueOpacity, scrollY }: { lang: Lang; cueOpacity: MotionVal
 
 function LangToggle({ lang, onToggle }: { lang: Lang; onToggle: () => void }) {
   return (
-    <button className="lang-toggle" onClick={onToggle} aria-label="切换语言 / Switch language">
+    <button className="lang-toggle" onClick={onToggle} aria-label={lang === 'en' ? 'Switch to Chinese' : '切换为英文'}>
       {lang === 'en' ? '中文' : 'EN'}
     </button>
   )
 }
 
 function Portfolio() {
-  const [lang, setLang] = useState<Lang>(() => { try { return localStorage.getItem('spike-language') === 'en' ? 'en' : 'zh' } catch { return 'zh' } })
+  const [lang, setLang] = useState<Lang>(getInitialLang)
   const [mode, setMode] = useState<'home' | 'launch' | 'space' | 'return'>('home')
   const [ready, setReady] = useState(false)
   const low = useSpace(s => s.low)
