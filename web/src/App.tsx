@@ -51,11 +51,11 @@ function getInitialLang(): Lang {
 const COPY = {
   en: {
     title: 'Spike',
-    paragraphs: [] as string[],
+    paragraphs: ['Turning real needs into practical AI tools and workflows.'],
   },
   zh: {
     title: 'Spike',
-    paragraphs: [] as string[],
+    paragraphs: ['将真实需求转化为实用的 AI 工具与工作流。'],
   },
 }
 
